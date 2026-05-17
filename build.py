@@ -77,10 +77,12 @@ def inline(html: str, base_dir: Path) -> str:
         js = resolve(src).read_text(encoding="utf-8-sig")
         return f"<script>\n{js}\n</script>"
 
+    # 終了タグは `</script >`（空白入り）や大文字も許容する
     html = re.sub(
-        r'<script\s+src="(?P<src>[^"]+)"[^>]*>\s*</script>',
+        r'<script\s+src="(?P<src>[^"]+)"[^>]*>\s*</\s*script\s*>',
         js_repl,
         html,
+        flags=re.IGNORECASE,
     )
 
     # 3. <img ... src="..."> のローカル画像 → data URI
